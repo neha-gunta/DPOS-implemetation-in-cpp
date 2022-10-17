@@ -28,5 +28,5 @@ Functions created:
 •	chooseWitnesses() : Voting system used to elect the witnesses. Implemented using DPOS consensus Algorithm. The number of witnesses can be changes in the code, this function returns a vector<int> of witness IDs
 •	verifytransaction() : Verification done by witnesses, returns the bool(T/F) for each transaction;
 •	addBlock() : Used to add a block in the blockchain network. Every block contains 2 transactions. This function is executed once the queue containing the transaction reaches size of 2. The number of transactions can be changed in the code.
-•	viewChain(): shows details of every block in the chain.
+•	viewChain(): shows details of every block in the chain.\n
 •	generateNewBlock(): chooses the witnesses, verifies the transactions, and updates the reward value of the witnesses.
