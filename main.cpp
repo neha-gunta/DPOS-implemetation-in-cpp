@@ -11,7 +11,7 @@
 
 
 #define numberOfWitnesses 2
-#define transacPerBlock 2
+#define transacPerBlock 4
 
 using namespace std;
 //generates a time stamp in string;
@@ -161,6 +161,8 @@ class Block{
 
 vector<property> allProps;
 vector<Node> allUsers;
+vector<Block> blockchain;
+
 queue<transaction> transactionPool;
 int numberOfUsers=0;
 int numberOfProperties=0;
@@ -265,6 +267,7 @@ int addBlock(vector<int> witnesses){
             
     }
     Block b(transIDs);
+    blockchain.push_back(b);
     return reward;
     
 }
@@ -275,7 +278,8 @@ void generateNewBlock(){
     int reward=addBlock(witnesses);
     queue<transaction> temp=transactionPool;
     if(reward==-1) {transactionPool=temp; return;}
-    allUsers[witnesses[0]].reward+=reward;
+    for(int i=0;i<numberOfWitnesses;i++)
+    allUsers[witnesses[i]].reward+=reward/numberOfWitnesses;
 }
 
 //A function to record buy and sell transaction of user
@@ -322,7 +326,16 @@ void dummyTransactions(){
     transactionPool.push(newTransaction4);
 }
 
-
+void printChain(){
+    for(int i=0;i<blockchain.size();i++){
+        cout<<"Block :         "<<i<<endl;
+        cout<<"previous hash : "<<blockchain[i].prevHash<<endl;
+        cout<<"timeStamp :     "<<blockchain[i].timeStamp<<endl;
+        cout<<"Nonce :         "<<blockchain[i].nonce<<endl;
+        cout<<"merkleroot :    "<<blockchain[i].hashOfData<<endl;
+        cout<<endl;
+    }
+}
 int main(int argc, char *argv[]){
     createProp();
     createUsers();
@@ -331,17 +344,17 @@ int main(int argc, char *argv[]){
     
     vector<int> null;
     Block genesis(null);
-    generateNewBlock();
-    cout<<latestHash<<endl;
+    blockchain.push_back(genesis);
     
     int choice=10;
     while(true){
-        cout<<"enter a choice:\n1. Add new User\n2. Add new transaction\n3. View transactions of a property.\n enter -1 to stop running the code"<<endl;
+        cout<<"enter a choice:\n1. Add new User\n2. Add new transaction\n3. View transactions of a property.\n4. Print the blockchain \n enter -1 to stop running the code"<<endl;
         cin>>choice;
         switch(choice){
         case 1:addUser(); break;
         case 2:addTransactions(); break;
         case 3:viewHistory(); break;
+        case 4:printChain(); break;
         case -1: return 0;
         default:cout<<"Invalid choice"<<endl;
         }
